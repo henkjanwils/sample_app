@@ -8,8 +8,8 @@ describe "Authentication" do
     before { visit signin_path }
     it { should have_content('Sign in') }
     it { should have_title('Sign in') }
-    it { should have_field('session[email]') }
-    it { should have_field('session[password]') }
+    it { should have_field('email') }
+    it { should have_field('password') }
     it { should have_button('Sign in') }
   end
 
