@@ -75,8 +75,10 @@ describe "User pages" do
   describe "profile page" do
 
     let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
     let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
     let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+    let!(:m3) { FactoryGirl.create(:micropost, user: other_user, content: "Haystack") }
 
     before { visit user_path(user) }
 
@@ -86,8 +88,24 @@ describe "User pages" do
     describe "microposts" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
+      it { should_not have_content(m3.content) }
       it { should have_content(user.microposts.count) }
     end
+
+    describe "for other signed-in users" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      let(:m4) { FactoryGirl.create(:micropost, user: other_user, content: "Needle") }
+
+      before do
+        sign_in other_user
+        visit user_path(user)
+      end
+
+      it "should not show delete links" do
+        expect(page).to_not have_link( 'delete', "/microposts/#{m4.id}" )
+      end
+    end
+
   end
 
   describe "signup page" do

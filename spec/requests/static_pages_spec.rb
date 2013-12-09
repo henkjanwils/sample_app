@@ -33,6 +33,9 @@ describe "Static pages" do
         end
       end
 
+      it "should have a microposts count" do
+        expect(page).to have_selector("span", text: "2 microposts" )
+      end
     end
 
   end
